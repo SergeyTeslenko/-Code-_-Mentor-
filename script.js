@@ -9,6 +9,64 @@ if (header) {
   window.addEventListener("scroll", setHeaderState, { passive: true });
 }
 
+/* Course cards reveal one course at a time on the landing page */
+const courseLinks = document.querySelectorAll("[data-course-toggle]");
+const coursePanels = document.querySelectorAll(".course-content");
+
+function showCoursePanel(panel, sourceLink) {
+  coursePanels.forEach((coursePanel) => {
+    coursePanel.hidden = coursePanel !== panel;
+  });
+  courseLinks.forEach((courseLink) => {
+    courseLink.setAttribute("aria-expanded", String(courseLink === sourceLink));
+    courseLink.textContent =
+      courseLink === sourceLink ? "Скрыть программу ↑" : "Смотреть программу →";
+  });
+}
+
+courseLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    const panelId = link.getAttribute("aria-controls");
+    const panel = panelId ? document.getElementById(panelId) : null;
+
+    if (!panel) {
+      console.error(`Course content panel not found: ${panelId}`);
+      return;
+    }
+
+    if (panel.hidden) {
+      showCoursePanel(panel, link);
+      history.replaceState(null, "", `#${panel.id}`);
+      requestAnimationFrame(() => panel.scrollIntoView({ behavior: "smooth", block: "start" }));
+    } else {
+      showCoursePanel(null, null);
+      history.replaceState(null, "", "#courses");
+      requestAnimationFrame(() =>
+        document.getElementById("courses")?.scrollIntoView({ behavior: "smooth", block: "start" }),
+      );
+    }
+  });
+});
+
+document.querySelectorAll('.course-content a[href="#courses"]').forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    showCoursePanel(null, null);
+    history.replaceState(null, "", "#courses");
+    requestAnimationFrame(() =>
+      document.getElementById("courses")?.scrollIntoView({ behavior: "smooth", block: "start" }),
+    );
+  });
+});
+
+const initialCoursePanel = document.getElementById(window.location.hash.slice(1));
+if (initialCoursePanel?.matches(".course-content")) {
+  const initialLink = document.querySelector(`[aria-controls="${initialCoursePanel.id}"]`);
+  showCoursePanel(initialCoursePanel, initialLink);
+  requestAnimationFrame(() => initialCoursePanel.scrollIntoView({ block: "start" }));
+}
+
 /* Калькулятор стоимости — есть только на главной странице */
 const format = document.getElementById("format");
 const lessons = document.getElementById("lessons");
