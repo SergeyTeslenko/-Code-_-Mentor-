@@ -711,7 +711,8 @@ h1 span, h2 span { color: var(--accent); }
 
 /* Footer and contact controls */
 footer { padding: 26px 0; border-top: 1px solid var(--line); background: #fff; }
-.footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.footer-inner { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px; }
+.footer-inner > .logo { justify-self: start; }
 .footer-inner > span { color: #64748b; font-size: .88rem; text-align: center; }
 .footer-inner > a:last-child { color: #c2410c; font-weight: 700; }
 .contact-widget { position: fixed; z-index: 1000; right: 24px; bottom: 24px; display: grid; justify-items: end; gap: 12px; }
