@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261029-15">
+  <link rel="stylesheet" href="styles.css?v=20261030-40">
 </head>
 
 <body>
@@ -1712,77 +1712,127 @@
 
     <section class="section prices-section" id="prices">
       <div class="container">
-        <h2 class="prices-title">Цены</h2>
+        <div class="prices-heading">
+          <div class="eyebrow">✨ Понятные условия, заметный прогресс</div>
+          <h2 class="prices-title">Выберите свой <span>темп</span></h2>
+          <p class="prices-subtitle">Начните с одного урока или выберите пакет для системного обучения.</p>
+        </div>
         <div class="pricing-grid">
           <article class="price-card">
-            <div class="box-icon" aria-hidden="true">
+            <div class="box-icon box-icon-trial" aria-hidden="true">
               <svg viewBox="0 0 64 64" aria-hidden="true">
-                <path d="M20 19h24v18H20z" fill="none" stroke="currentColor" stroke-width="2.8"
-                  stroke-linejoin="round" />
-                <path d="M24 19V14h16v5M20 27h24M22 39h20" fill="none" stroke="currentColor" stroke-width="2.8"
-                  stroke-linecap="round" />
+                <path d="M22 27a10 10 0 1 1 20 0c0 4-2 6-5 9H27c-3-3-5-5-5-9Z" />
+                <path d="M28 41h8M29 46h6M32 3v5M12 12l4 4M52 12l-4 4" />
               </svg>
             </div>
-            <h3>1 Урок</h3>
-            <p>Стоимость одного урока — <span>22$ / 1853₽</span></p>
+            <p class="price-card-kicker">ЗНАКОМСТВО</p>
+            <h3>Пробный урок в Zoom</h3>
+            <p class="price-card-price">Бесплатно</p>
+            <p class="price-card-duration">30 минут</p>
+            <ul class="price-card-details">
+              <li>Знакомство с преподавателем</li>
+              <li>Мини-практика и небольшая задача</li>
+              <li>Определение уровня знаний</li>
+              <li>Последние 5 минут — с родителями: обсудим план обучения</li>
+            </ul>
           </article>
           <article class="price-card">
-            <div class="box-icon" aria-hidden="true">
+            <div class="box-icon box-icon-single" aria-hidden="true">
               <svg viewBox="0 0 64 64" aria-hidden="true">
-                <path d="M20 19h24v18H20z" fill="none" stroke="currentColor" stroke-width="2.8"
-                  stroke-linejoin="round" />
-                <path d="M24 19V14h16v5M20 27h24M22 39h20" fill="none" stroke="currentColor" stroke-width="2.8"
-                  stroke-linecap="round" />
+                <circle cx="32" cy="21" r="8" />
+                <path d="M17 49c1-9 7-14 15-14s14 5 15 14M47 13v12M41 19h12" />
               </svg>
             </div>
-            <h3>8 Уроков</h3>
-            <p>Стоимость пакета — <span>165$ / 13 900₽</span></p>
-            <p class="small">Стоимость одного урока — <span>20.63$ / 1738₽</span></p>
+            <p class="price-card-kicker">ОПЛАТА ПО ФАКТУ</p>
+            <h3>1 занятие</h3>
+            <p class="price-card-price">30 BYN</p>
+            <p class="price-card-duration">50–60 минут</p>
+            <p class="price-card-description">Для разовой консультации, разбора сложной темы или гибкого графика без обязательств.</p>
           </article>
           <article class="price-card">
-            <div class="box-icon" aria-hidden="true">
+            <div class="box-icon box-icon-optimal" aria-hidden="true">
               <svg viewBox="0 0 64 64" aria-hidden="true">
-                <path d="M20 19h24v18H20z" fill="none" stroke="currentColor" stroke-width="2.8"
-                  stroke-linejoin="round" />
-                <path d="M24 19V14h16v5M20 27h24M22 39h20" fill="none" stroke="currentColor" stroke-width="2.8"
-                  stroke-linecap="round" />
+                <path d="m32 8 7 15 17 2-12 11 3 17-15-8-15 8 3-17L8 25l17-2 7-15Z" />
+                <path d="m24 32 5 5 11-12" />
               </svg>
             </div>
-            <h3>16 Уроков</h3>
-            <p>Стоимость пакета — <span>320$ / 26 956₽</span></p>
-            <p class="small">Стоимость одного урока — <span>20$ / 1685₽</span></p>
+            <p class="price-card-kicker">ХИТ ПРОДАЖ</p>
+            <h3>Пакет «Оптимальный»</h3>
+            <p class="price-card-lessons">4 урока</p>
+            <p class="price-card-price">100 BYN</p>
+            <p class="price-card-unit">25 BYN за урок <span>Экономия 20 BYN</span></p>
+            <p class="price-card-description">Занятия 2 раза в неделю, оплата раз в две недели. Комфортный платёж для семейного бюджета.</p>
           </article>
-          <article class="price-card">
-            <div class="box-icon" aria-hidden="true">
+          <article class="price-card price-card-pair">
+            <span class="price-badge"><span class="price-badge-star" aria-hidden="true">★</span> Интересное предложение</span>
+            <div class="box-icon box-icon-pair" aria-hidden="true">
               <svg viewBox="0 0 64 64" aria-hidden="true">
-                <path d="M20 19h24v18H20z" fill="none" stroke="currentColor" stroke-width="2.8"
-                  stroke-linejoin="round" />
-                <path d="M24 19V14h16v5M20 27h24M22 39h20" fill="none" stroke="currentColor" stroke-width="2.8"
-                  stroke-linecap="round" />
+                <circle cx="24" cy="22" r="7" />
+                <circle cx="42" cy="25" r="6" />
+                <path d="M10 49c1-9 6-14 14-14s13 5 14 14M37 37c7-2 14 2 17 9" />
               </svg>
             </div>
-            <h3>24 Урока</h3>
-            <p>Стоимость пакета — <span>460$ / 38 749₽</span></p>
-            <p class="small">Стоимость одного урока — <span>19.17$ / 1615₽</span></p>
+            <p class="price-card-kicker">ДЛЯ ДВОИХ</p>
+            <h3>«Вместе веселее»</h3>
+            <p class="price-card-lessons">Парное занятие · 55 минут</p>
+            <p class="price-card-price">17 BYN</p>
+            <p class="price-card-unit">за урок с человека <span>Абонемент на 8 занятий — 136 BYN с человека</span></p>
+            <p class="price-card-description">Разовое занятие — 20 BYN с человека. Занимайтесь с другом или одноклассником: программа адаптируется под двух учеников одного уровня.</p>
           </article>
           <article class="price-card price-card-featured">
-            <span class="price-badge">Лучшая цена за урок</span>
-            <div class="box-icon" aria-hidden="true">
+            <span class="price-badge price-badge-pair"><span aria-hidden="true">%</span> Самый выгодный</span>
+            <div class="box-icon box-icon-progress" aria-hidden="true">
               <svg viewBox="0 0 64 64" aria-hidden="true">
-                <path d="M20 19h24v18H20z" fill="none" stroke="currentColor" stroke-width="2.8"
-                  stroke-linejoin="round" />
-                <path d="M24 19V14h16v5M20 27h24M22 39h20" fill="none" stroke="currentColor" stroke-width="2.8"
-                  stroke-linecap="round" />
+                <path d="M10 48h44M15 41l12-12 9 7 16-19" />
+                <path d="M40 17h12v12" />
               </svg>
             </div>
-            <h3>32 Урока</h3>
-            <p>Стоимость пакета — <span>590$ / 49 699₽</span></p>
-            <p class="small">Стоимость одного урока — <span>18.44$ / 1553₽</span></p>
+            <p class="price-card-kicker">ПАКЕТ НА МЕСЯЦ</p>
+            <h3>Пакет «Прогресс»</h3>
+            <p class="price-card-lessons">8 уроков</p>
+            <p class="price-card-price">192 BYN</p>
+            <p class="price-card-unit">24 BYN за урок <span>Экономия 48 BYN</span></p>
+            <p class="price-card-description">Занятия 2 раза в неделю. Фиксированное место в расписании и максимальная скидка.</p>
           </article>
         </div>
-        <p class="pricing-note">Принимаю оплату в рублях, долларах, евро, турецких лирах, а также USDT. Если оплата в
-          валюте отличной от ₽, расчёт производится по Google курсу на момент оплаты. Можете воспользоваться
-          калькулятором оплаты ниже.</p>
+        <div class="pricing-perks">
+          <div class="pricing-perks-heading">
+            <span class="pricing-perks-icon" aria-hidden="true">✦</span>
+            <div>
+              <p>БЕЗ ДОПЛАТ И СЮРПРИЗОВ</p>
+              <h3>Всё необходимое уже включено</h3>
+            </div>
+          </div>
+          <div class="pricing-perks-grid">
+            <div class="pricing-perk">
+              <span class="pricing-perk-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="6" width="13" height="12" rx="2" />
+                  <path d="m16 10 5-3v10l-5-3" />
+                </svg>
+              </span>
+              <p><strong>Один на один</strong><span>Индивидуальные занятия в Zoom.</span></p>
+            </div>
+            <div class="pricing-perk">
+              <span class="pricing-perk-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5z" />
+                  <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h8M8 10h7" />
+                </svg>
+              </span>
+              <p><strong>Материалы бесплатно</strong><span>Учебники и домашние задания уже включены.</span></p>
+            </div>
+            <div class="pricing-perk">
+              <span class="pricing-perk-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 7v5l3 2" />
+                </svg>
+              </span>
+              <p><strong>Удобный перенос</strong><span>Без потери оплаты, если предупредить за 3–4 часа.</span></p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1796,14 +1846,14 @@
         <div class="calculator">
           <label>Формат
             <select id="format">
-              <option value="1200">Индивидуально — 1 200 ₽</option>
-              <option value="1050">Абонемент — 1 050 ₽ / занятие</option>
-              <option value="900">Интенсив — 900 ₽ / занятие</option>
+              <option value="30">Разовое занятие — 30 BYN</option>
+              <option value="25">Пакет «Оптимальный» — 25 BYN / занятие</option>
+              <option value="24">Пакет «Прогресс» — 24 BYN / занятие</option>
             </select>
           </label>
           <label>Занятий в месяц <input id="lessons" type="range" min="2" max="16" value="8"><output id="lessonOut">8
               занятий</output></label>
-          <div class="total"><span>Итого ориентировочно</span><strong id="total">9 600 ₽</strong></div>
+          <div class="total"><span>Итого ориентировочно</span><strong id="total">200 BYN</strong></div>
           <a class="btn primary full" href="#signup">Получить точный расчёт →</a>
         </div>
       </div>
@@ -1921,7 +1971,7 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=20261030-3"></script>
   <div class="support-widget" id="supportWidget">
     <div class="support-panel" id="supportPanel">
       <div class="support-header">

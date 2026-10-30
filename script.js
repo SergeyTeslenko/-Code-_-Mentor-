@@ -67,6 +67,44 @@ if (initialCoursePanel?.matches(".course-content")) {
   requestAnimationFrame(() => initialCoursePanel.scrollIntoView({ block: "start" }));
 }
 
+const pricingCarousel = document.getElementById("pricingCarousel");
+
+if (pricingCarousel) {
+  const pricingButtons = document.querySelectorAll("[data-pricing-direction]");
+  const pricingCards = pricingCarousel.querySelectorAll(".price-card");
+
+  const updatePricingButtons = () => {
+    pricingButtons.forEach((button) => {
+      const direction = Number(button.getAttribute("data-pricing-direction"));
+      button.disabled =
+        direction < 0
+          ? pricingCarousel.scrollLeft <= 1
+          : pricingCarousel.scrollLeft + pricingCarousel.clientWidth >=
+            pricingCarousel.scrollWidth - 1;
+    });
+  };
+
+  pricingButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const firstCard = pricingCards[0];
+      if (!firstCard) return;
+
+      const gap = Number.parseFloat(getComputedStyle(pricingCarousel).columnGap) || 0;
+      const direction = Number(button.getAttribute("data-pricing-direction"));
+      pricingCarousel.scrollBy({
+        left: direction * (firstCard.getBoundingClientRect().width + gap),
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+      });
+    });
+  });
+
+  pricingCarousel.addEventListener("scroll", updatePricingButtons, { passive: true });
+  window.addEventListener("resize", updatePricingButtons);
+  updatePricingButtons();
+}
+
 /* Калькулятор стоимости — есть только на главной странице */
 const format = document.getElementById("format");
 const lessons = document.getElementById("lessons");
@@ -82,8 +120,10 @@ function calculate() {
 
   lessons.style.setProperty("--percent", `${percent}%`);
   lessonOut.textContent = `${count} ${count === 1 ? "занятие" : count < 5 ? "занятия" : "занятий"}`;
-  total.textContent =
-    new Intl.NumberFormat("ru-RU").format(count * price) + " ₽";
+  total.textContent = new Intl.NumberFormat("ru-RU", {
+    style: "currency",
+    currency: "BYN",
+  }).format(count * price);
 }
 
 if (format && lessons && lessonOut && total) {
