@@ -26,7 +26,7 @@
 2. В настройках Worker добавьте переменные:
    - `TELEGRAM_BOT_TOKEN` — токен бота как **Secret**.
    - `TELEGRAM_CHAT_ID` — ваш числовой Telegram ID как **Secret**. Его можно узнать у `@userinfobot`.
-   - `SITE_ORIGIN` — адрес сайта без завершающего `/`, например `https://example.com`.
+   - `SITE_ORIGIN` — точный origin сайта без завершающего `/`. Для локальной проверки это `http://127.0.0.1:8000`; после публикации замените на production-адрес, например `https://example.com`.
 3. Скопируйте адрес Worker, например `https://имя-воркера.<аккаунт>.workers.dev`, и укажите его в `data-endpoint` у формы `#form` в `index.html`.
 4. Загрузите обновлённый сайт на хостинг. В Telegram откройте своего бота и нажмите **Start**, если ещё не нажимали.
 
