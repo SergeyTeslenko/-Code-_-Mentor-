@@ -22,12 +22,26 @@
 
 ## Подключение заявок в Telegram бесплатно
 
-1. В Cloudflare создайте Worker и вставьте в редактор содержимое `telegram-worker.js`, затем опубликуйте его.
-2. В настройках Worker добавьте переменные:
-   - `TELEGRAM_BOT_TOKEN` — токен бота как **Secret**.
-   - `TELEGRAM_CHAT_ID` — ваш числовой Telegram ID как **Secret**. Его можно узнать у `@userinfobot`.
-   - `SITE_ORIGIN` — точный origin сайта без завершающего `/`. Для локальной проверки это `http://127.0.0.1:8000`; после публикации замените на production-адрес, например `https://example.com`.
-3. Скопируйте адрес Worker, например `https://имя-воркера.<аккаунт>.workers.dev`, и укажите его в `data-endpoint` у формы `#form` в `index.html`.
-4. Загрузите обновлённый сайт на хостинг. В Telegram откройте своего бота и нажмите **Start**, если ещё не нажимали.
+Форма отправляет заявки в Telegram. Бот также отвечает на `/start`, пересылает текстовые сообщения посетителей владельцу и доставляет ответ владельца обратно в личный чат посетителя.
 
-Не добавляйте токен бота в файлы сайта или Git. После настройки проверьте отправку тестовой заявки.
+1. В Cloudflare откройте существующий Worker и замените его код содержимым `telegram-worker.js`, затем опубликуйте.
+2. В **Settings → Variables and Secrets** настройте:
+   - `TELEGRAM_BOT_TOKEN` — актуальный токен бота как **Secret**.
+   - `TELEGRAM_CHAT_ID` — ваш числовой Telegram ID как **Secret** (его можно узнать у `@userinfobot`).
+   - `TELEGRAM_WEBHOOK_SECRET` — случайная строка из латинских букв, цифр, `_` и `-`; создайте её, например, командой PowerShell `[guid]::NewGuid().ToString("N")`.
+   - `WEBHOOK_SETUP_SECRET` — отдельная случайная строка, созданная такой же командой.
+   - `SITE_ORIGIN` — точный origin сайта без завершающего `/`, например `https://example.com`.
+3. Создайте KV namespace, например `telegram-chat-mappings`, и добавьте его в Worker в **Settings → Bindings → KV namespace** с variable name `CHAT_MAPPINGS`. Эта привязка нужна, чтобы бот мог доставлять ваши ответы нужным посетителям.
+4. Опубликуйте Worker. Один раз зарегистрируйте webhook, выполнив в PowerShell (подставьте URL вашего Worker):
+
+   ```powershell
+   $worker = "https://your-worker.workers.dev"
+   $setupSecret = Read-Host "Введите WEBHOOK_SETUP_SECRET"
+   Invoke-RestMethod -Method Post -Uri "$worker/admin/set-webhook" -Headers @{ Authorization = "Bearer $setupSecret" }
+   ```
+
+   Введите значение `WEBHOOK_SETUP_SECRET`, заданное в Cloudflare. Не публикуйте его и токен бота.
+5. Убедитесь, что адрес Worker указан в `data-endpoint` у формы `#form` в `index.html`. Загрузите обновлённый сайт на хостинг и установите `SITE_ORIGIN` равным адресу опубликованного сайта.
+6. Проверьте `/start` в чате с ботом. Чтобы ответить посетителю, используйте в чате владельца Telegram функцию **Ответить** на пересланном сообщении. Бот принимает текстовые сообщения.
+
+Токен, setup-секреты и chat ID храните только в Cloudflare Secrets. Для локальной проверки временно установите `SITE_ORIGIN` в `http://127.0.0.1:8000`, а перед публикацией замените на production-origin сайта.
