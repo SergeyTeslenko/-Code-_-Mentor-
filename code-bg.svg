@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720" fill="none">
+  <rect width="720" height="720" fill="#eeeaff"/>
+  <path d="M95 215 510 455v220L95 435V215Z" fill="#d8d0ee"/>
+  <path d="m250 92 330 190v225L250 317V92Z" fill="#cfc6e7"/>
+  <path d="m390 25 235 136v218L390 243V25Z" fill="#c5b9e0"/>
+  <path d="m390 25 235 136-42 24-235-136 42-24Z" fill="#b2a5d2" opacity=".7"/>
+  <path d="m95 215 415 240-42 24L53 239l42-24Z" fill="#b2a5d2" opacity=".7"/>
+  <path d="m182 260 110 64v33l-110-64v-33Z" fill="#F28A45"/>
+  <path d="m381 150 126 73v34l-126-73v-34Z" fill="#638ACA"/>
+  <path d="m252 385 174 101v12L252 397v-12ZM252 414l139 81v12l-139-81v-12ZM252 443l100 58v12l-100-58v-12Z" fill="#8278a9" opacity=".65"/>
+  <path d="m132 493 210 121v12L132 505v-12ZM132 521l168 97v12l-168-97v-12ZM132 549l116 67v12l-116-67v-12Z" fill="#8278a9" opacity=".65"/>
+  <path d="M333 76c-22-13-36-3-36 22v37c0 15-7 20-21 12l-16-9v34l16 9c14 8 21 21 21 36v37c0 25 14 51 36 64l18 10v-35l-18-10c-11-6-17-19-17-32v-40c0-20-8-37-23-50 15 4 23-4 23-24v-39c0-13 6-18 17-12l18 10V86l-18-10Z" fill="#a49ac7"/>
+  <circle cx="155" cy="253" r="12" fill="#a49ac7" opacity=".7"/>
+  <circle cx="447" cy="109" r="12" fill="#a49ac7" opacity=".7"/>
+</svg>

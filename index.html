@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261030-40">
+  <link rel="stylesheet" href="styles.css?v=20261104-44">
 </head>
 
 <body>
@@ -98,6 +98,8 @@
                 <small>Инструменты</small>
                 <div>
                   <span>Git</span>
+                  <span>VS Code</span>
+                  <span>PyCharm</span>
                   <span>Figma</span>
                   <span>Roblox Studio</span>
                   <span>Rhino 8</span>
@@ -1797,7 +1799,12 @@
         </div>
         <div class="pricing-perks">
           <div class="pricing-perks-heading">
-            <span class="pricing-perks-icon" aria-hidden="true">✦</span>
+            <span class="pricing-perks-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 2.8 14.4 9.6 21.2 12l-6.8 2.4L12 21.2l-2.4-6.8L2.8 12l6.8-2.4L12 2.8Z" />
+                <path d="m19 2 .7 2.3L22 5l-2.3.7L19 8l-.7-2.3L16 5l2.3-.7L19 2Z" />
+              </svg>
+            </span>
             <div>
               <p>БЕЗ ДОПЛАТ И СЮРПРИЗОВ</p>
               <h3>Всё необходимое уже включено</h3>
@@ -1807,8 +1814,9 @@
             <div class="pricing-perk">
               <span class="pricing-perk-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
-                  <rect x="3" y="6" width="13" height="12" rx="2" />
-                  <path d="m16 10 5-3v10l-5-3" />
+                  <rect x="3" y="6" width="12" height="12" rx="3" />
+                  <path d="m15 10 5-3a1 1 0 0 1 1.5.9v8.2a1 1 0 0 1-1.5.9L15 14" />
+                  <circle cx="9" cy="12" r="2" />
                 </svg>
               </span>
               <p><strong>Один на один</strong><span>Индивидуальные занятия в Zoom.</span></p>
@@ -1816,8 +1824,8 @@
             <div class="pricing-perk">
               <span class="pricing-perk-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5z" />
-                  <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h8M8 10h7" />
+                  <path d="M12 6.2C9.8 4.7 7 4 4 4v14c3 0 5.8.7 8 2.2 2.2-1.5 5-2.2 8-2.2V4c-3 0-5.8.7-8 2.2Z" />
+                  <path d="M12 6.2v14M7 8.2c1.3.2 2.5.6 3.5 1.2M17 8.2c-1.3.2-2.5.6-3.5 1.2M7 11.5c1.3.2 2.5.6 3.5 1.2M17 11.5c-1.3.2-2.5.6-3.5 1.2" />
                 </svg>
               </span>
               <p><strong>Материалы бесплатно</strong><span>Учебники и домашние задания уже включены.</span></p>
@@ -1826,7 +1834,7 @@
               <span class="pricing-perk-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none">
                   <circle cx="12" cy="12" r="9" />
-                  <path d="M12 7v5l3 2" />
+                  <path d="M12 7v5l3.2 2M12 3v1.5M21 12h-1.5M12 21v-1.5M3 12h1.5" />
                 </svg>
               </span>
               <p><strong>Удобный перенос</strong><span>Без потери оплаты, если предупредить за 3–4 часа.</span></p>
@@ -1893,6 +1901,10 @@
                 <summary>Можно ли сменить курс?</summary>
                 <p>Да. Если интересы ребёнка изменились, программу можно скорректировать вместе с наставником.</p>
               </details>
+              <details>
+                <summary>Нужно ли покупать учебные материалы?</summary>
+                <p>Нет, учебные материалы и домашние задания уже включены в стоимость занятий.</p>
+              </details>
             </div>
           </div>
 
@@ -1937,14 +1949,14 @@
           <h2>Давайте познакомимся<br><span>на пробном занятии</span></h2>
           <p>Оставьте контакты — обсудим возраст, интересы ребёнка и подберём подходящий курс.</p>
         </div>
-        <form id="form" class="signup-form">
+        <form id="form" class="signup-form" data-endpoint="">
           <label class="field">
             <span class="field-label">Имя родителя</span>
             <input required name="name" placeholder="Ваше имя">
           </label>
           <label class="field">
             <span class="field-label">Телефон / Telegram</span>
-            <input required name="contact" placeholder="+7 900 000-00-00">
+            <input required name="contact" type="tel" autocomplete="tel" placeholder="+375 (XX) XXX-XX-XX">
           </label>
           <label class="field">
             <span class="field-label">Возраст ребёнка</span>
@@ -1960,8 +1972,9 @@
             <input name="interest" placeholder="Python, игры, сайты...">
           </label>
           <button class="btn white full" type="submit">Записаться бесплатно <b>↗</b></button>
+          <p class="signup-status" id="signupStatus" role="status" aria-live="polite"></p>
         </form>
-        <small class="signup-note">Форма демонстрационная — подключите Telegram, почту или CRM.</small>
+        <small class="signup-note">После настройки заявки будут приходить в Telegram.</small>
       </div>
     </section>
   </main>
@@ -1971,7 +1984,7 @@
     </div>
   </footer>
 
-  <script src="script.js?v=20261030-3"></script>
+  <script src="script.js?v=20261104-4"></script>
   <div class="support-widget" id="supportWidget">
     <div class="support-panel" id="supportPanel">
       <div class="support-header">

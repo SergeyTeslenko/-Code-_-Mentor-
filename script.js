@@ -136,13 +136,43 @@ if (format && lessons && lessonOut && total) {
 const signupForm = document.getElementById("form");
 
 if (signupForm) {
-  signupForm.addEventListener("submit", (e) => {
+  const signupStatus = document.getElementById("signupStatus");
+  const submitButton = signupForm.querySelector('button[type="submit"]');
+
+  signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const name = e.currentTarget.elements.name.value.trim();
-    alert(
-      `Спасибо, ${name || "родитель"}! Заявка заполнена. Подключите обработчик формы, чтобы отправлять её в Telegram/CRM.`,
-    );
-    e.currentTarget.reset();
+    const endpoint = signupForm.dataset.endpoint.trim();
+
+    if (!endpoint) {
+      signupStatus.textContent =
+        "Форма пока не подключена. Пожалуйста, свяжитесь со мной через контакты на сайте.";
+      return;
+    }
+
+    submitButton.disabled = true;
+    signupStatus.textContent = "Отправляем заявку…";
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(new FormData(signupForm))),
+      });
+
+      const result = await response.json();
+      if (!response.ok || !result.ok) {
+        throw new Error(result.error || "Не удалось отправить заявку.");
+      }
+
+      signupForm.reset();
+      signupStatus.textContent = "Спасибо! Заявка отправлена, скоро с вами свяжутся.";
+    } catch (error) {
+      console.error("Signup submission failed:", error);
+      signupStatus.textContent =
+        "Не удалось отправить заявку. Попробуйте ещё раз или свяжитесь со мной через контакты на сайте.";
+    } finally {
+      submitButton.disabled = false;
+    }
   });
 }
 
