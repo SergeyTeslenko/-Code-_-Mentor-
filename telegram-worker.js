@@ -104,6 +104,121 @@ async function handleLead(request, env) {
   return jsonResponse({ ok: true }, 200, corsHeaders);
 }
 
+function isValidSupportSessionId(value) {
+  return (
+    typeof value === "string" &&
+    (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value) ||
+      /^[0-9a-f]{32}$/i.test(value))
+  );
+}
+
+async function handleSupport(request, env) {
+  const corsHeaders = getCorsHeaders(env, request.headers.get("Origin"));
+
+  if (!corsHeaders) {
+    return jsonResponse({ ok: false, error: "Origin is not allowed." }, 403);
+  }
+
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: corsHeaders });
+  }
+
+  if (request.method !== "POST") {
+    return jsonResponse({ ok: false, error: "Method not allowed." }, 405, corsHeaders);
+  }
+
+  if (!request.headers.get("Content-Type")?.includes("application/json")) {
+    return jsonResponse({ ok: false, error: "Expected JSON." }, 415, corsHeaders);
+  }
+
+  if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID || !env.CHAT_MAPPINGS) {
+    return jsonResponse({ ok: false, error: "Support chat is not configured." }, 503, corsHeaders);
+  }
+
+  const contentLength = Number(request.headers.get("Content-Length") || 0);
+  if (contentLength > 4096) {
+    return jsonResponse({ ok: false, error: "Request is too large." }, 413, corsHeaders);
+  }
+
+  let data;
+  try {
+    data = await request.json();
+  } catch {
+    return jsonResponse({ ok: false, error: "Invalid JSON." }, 400, corsHeaders);
+  }
+
+  if (!data || !isValidSupportSessionId(data.sessionId)) {
+    return jsonResponse({ ok: false, error: "Invalid support session." }, 400, corsHeaders);
+  }
+
+  if (data.action === "poll") {
+    const after = Number(data.after);
+    if (!Number.isSafeInteger(after) || after < 0) {
+      return jsonResponse({ ok: false, error: "Invalid reply cursor." }, 400, corsHeaders);
+    }
+
+    try {
+      const storedReplies = await env.CHAT_MAPPINGS.get(`web:replies:${data.sessionId}`);
+      const replies = storedReplies ? JSON.parse(storedReplies) : [];
+      if (!Array.isArray(replies)) {
+        throw new Error("Stored support replies are not an array.");
+      }
+
+      return jsonResponse(
+        {
+          ok: true,
+          replies: replies.filter((reply) => Number.isSafeInteger(reply.id) && reply.id > after),
+        },
+        200,
+        corsHeaders,
+      );
+    } catch (error) {
+      console.error("Could not read website support replies:", error.message);
+      return jsonResponse({ ok: false, error: "Could not load support replies." }, 500, corsHeaders);
+    }
+  }
+
+  if (data.action !== "message") {
+    return jsonResponse({ ok: false, error: "Unsupported support action." }, 400, corsHeaders);
+  }
+
+  if (typeof data.text !== "string" || !data.text.trim() || data.text.length > 1500) {
+    return jsonResponse({ ok: false, error: "Message must contain 1–1500 characters." }, 400, corsHeaders);
+  }
+
+  const text = data.text.trim();
+  try {
+    const forwarded = await telegramCall(env, "sendMessage", {
+      chat_id: env.TELEGRAM_CHAT_ID,
+      text: [
+        "Новое сообщение из чата поддержки на сайте",
+        `ID диалога: ${data.sessionId}`,
+        "",
+        text,
+        "",
+        "Нажмите «Ответить» на это сообщение, чтобы отправить ответ посетителю на сайт.",
+      ].join("\n"),
+      reply_markup: {
+        force_reply: true,
+        input_field_placeholder: "Ответ посетителю на сайте…",
+        selective: true,
+      },
+    });
+
+    await env.CHAT_MAPPINGS.put(`reply:${forwarded.message_id}`, `web:${data.sessionId}`, {
+      expirationTtl: 60 * 60 * 24 * 30,
+    });
+    await env.CHAT_MAPPINGS.put(`web:last-session:${env.TELEGRAM_CHAT_ID}`, data.sessionId, {
+      expirationTtl: 60 * 60 * 24 * 30,
+    });
+  } catch (error) {
+    console.error("Could not forward website support message:", error.message);
+    return jsonResponse({ ok: false, error: "Could not send message to support." }, 502, corsHeaders);
+  }
+
+  return jsonResponse({ ok: true }, 200, corsHeaders);
+}
+
 async function handleWebhook(request, env) {
   if (!env.TELEGRAM_WEBHOOK_SECRET) {
     return jsonResponse({ ok: false, error: "Telegram webhook is not configured." }, 503);
@@ -137,35 +252,62 @@ async function handleWebhook(request, env) {
     if (text.startsWith("/start")) {
       await telegramCall(env, "sendMessage", {
         chat_id: chatId,
-        text: "Бот подключён. Новые заявки с сайта и сообщения посетителей будут приходить сюда. Чтобы ответить посетителю, используйте «Ответить» на его пересланном сообщении.",
+        text: "Бот подключён. Новые заявки с сайта и сообщения посетителей будут приходить сюда. Ответ обычным сообщением уйдёт последнему посетителю из чата сайта; чтобы ответить в другой диалог, используйте «Ответить» на его сообщении.",
       });
       return jsonResponse({ ok: true }, 200);
     }
 
     const repliedMessageId = message.reply_to_message?.message_id;
-    if (!repliedMessageId) {
-      await telegramCall(env, "sendMessage", {
-        chat_id: chatId,
-        text: "Чтобы ответить посетителю, отправьте ответ через функцию «Ответить» на пересланном сообщении от него.",
-      });
-      return jsonResponse({ ok: true }, 200);
-    }
-
     if (!env.CHAT_MAPPINGS) {
       console.error("CHAT_MAPPINGS KV binding is not configured.");
       return jsonResponse({ ok: false, error: "Reply routing is not configured." }, 503);
     }
 
-    const visitorChatId = await env.CHAT_MAPPINGS.get(`reply:${repliedMessageId}`);
-    if (!visitorChatId) {
+    let replyTarget;
+    if (repliedMessageId) {
+      replyTarget = await env.CHAT_MAPPINGS.get(`reply:${repliedMessageId}`);
+    } else {
+      const lastWebSession = await env.CHAT_MAPPINGS.get(`web:last-session:${chatId}`);
+      replyTarget = lastWebSession ? `web:${lastWebSession}` : null;
+    }
+    if (!replyTarget) {
       await telegramCall(env, "sendMessage", {
         chat_id: chatId,
-        text: "Не нашёл чат посетителя для этого сообщения. Ответьте именно на пересланное сообщение от посетителя.",
+        text: repliedMessageId
+          ? "Не нашёл чат посетителя для этого сообщения. Ответьте именно на пересланное сообщение от посетителя."
+          : "Пока нет диалога с сайта. Дождитесь сообщения посетителя или нажмите «Ответить» на сообщении из чата сайта.",
       });
       return jsonResponse({ ok: true }, 200);
     }
 
-    await telegramCall(env, "sendMessage", { chat_id: visitorChatId, text });
+    if (replyTarget.startsWith("web:")) {
+      const sessionId = replyTarget.slice(4);
+      const repliesKey = `web:replies:${sessionId}`;
+      try {
+        const storedReplies = await env.CHAT_MAPPINGS.get(repliesKey);
+        const replies = storedReplies ? JSON.parse(storedReplies) : [];
+        if (!Array.isArray(replies)) {
+          throw new Error("Stored support replies are not an array.");
+        }
+
+        replies.push({ id: message.message_id, text });
+        await env.CHAT_MAPPINGS.put(repliesKey, JSON.stringify(replies.slice(-100)), {
+          expirationTtl: 60 * 60 * 24 * 30,
+        });
+        await telegramCall(env, "sendMessage", {
+          chat_id: chatId,
+          text: "Ответ отправлен в чат поддержки на сайте.",
+          reply_to_message_id: message.message_id,
+        });
+      } catch (error) {
+        console.error("Could not deliver website support reply:", error.message);
+        return jsonResponse({ ok: false, error: "Could not deliver website support reply." }, 502);
+      }
+
+      return jsonResponse({ ok: true }, 200);
+    }
+
+    await telegramCall(env, "sendMessage", { chat_id: replyTarget, text });
     await telegramCall(env, "sendMessage", {
       chat_id: chatId,
       text: "Ответ отправлен посетителю.",
@@ -178,10 +320,15 @@ async function handleWebhook(request, env) {
     return jsonResponse({ ok: false, error: "Owner chat is not configured." }, 503);
   }
 
-  if (text.startsWith("/start")) {
+  if (text.startsWith("/start") || text === "🚀 Начать") {
     await telegramCall(env, "sendMessage", {
       chat_id: chatId,
-      text: "Здравствуйте! Это Code Mentor. Напишите ваш вопрос — наставник получит сообщение и ответит здесь. Чтобы записаться на бесплатное занятие, заполните форму на сайте.",
+      text: "Здравствуйте! Это Code Mentor. Нажмите «🚀 Начать», чтобы открыть это приветствие, или просто напишите ваш вопрос — наставник получит сообщение и ответит здесь. Чтобы записаться на бесплатное занятие, заполните форму на сайте.",
+      reply_markup: {
+        keyboard: [[{ text: "🚀 Начать" }]],
+        resize_keyboard: true,
+        is_persistent: true,
+      },
     });
     return jsonResponse({ ok: true }, 200);
   }
@@ -205,8 +352,13 @@ async function handleWebhook(request, env) {
         "",
         text,
         "",
-        "Ответьте на это сообщение через функцию «Ответить», и бот перешлёт ваш ответ посетителю.",
+        "Нажмите «Ответить» на это сообщение, чтобы ответить посетителю.",
       ].join("\n"),
+      reply_markup: {
+        force_reply: true,
+        input_field_placeholder: "Ваш ответ посетителю…",
+        selective: true,
+      },
     });
 
     await env.CHAT_MAPPINGS.put(`reply:${forwarded.message_id}`, chatId, {
@@ -268,6 +420,10 @@ export default {
 
     if (path === "/admin/set-webhook") {
       return registerWebhook(request, env);
+    }
+
+    if (path === "/api/support") {
+      return handleSupport(request, env);
     }
 
     if (path === "/" || path === "/api/lead") {

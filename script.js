@@ -138,6 +138,20 @@ const signupForm = document.getElementById("form");
 if (signupForm) {
   const signupStatus = document.getElementById("signupStatus");
   const submitButton = signupForm.querySelector('button[type="submit"]');
+  const submitButtonLabel = submitButton?.innerHTML;
+  let hasSubmitted = false;
+
+  const restoreSubmitButton = () => {
+    if (!hasSubmitted || !submitButton || !submitButtonLabel) return;
+
+    hasSubmitted = false;
+    submitButton.disabled = false;
+    submitButton.innerHTML = submitButtonLabel;
+    submitButton.classList.remove("is-success");
+  };
+
+  signupForm.addEventListener("input", restoreSubmitButton);
+  signupForm.addEventListener("change", restoreSubmitButton);
 
   signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -150,6 +164,7 @@ if (signupForm) {
     }
 
     submitButton.disabled = true;
+    submitButton.textContent = "Отправляем…";
     signupStatus.textContent = "Отправляем заявку…";
 
     try {
@@ -159,19 +174,245 @@ if (signupForm) {
         body: JSON.stringify(Object.fromEntries(new FormData(signupForm))),
       });
 
-      const result = await response.json();
+      let result;
+      try {
+        result = await response.json();
+      } catch {
+        throw new Error("Сервер вернул некорректный ответ.");
+      }
+
       if (!response.ok || !result.ok) {
         throw new Error(result.error || "Не удалось отправить заявку.");
       }
 
       signupForm.reset();
+      hasSubmitted = true;
+      submitButton.innerHTML = "Заявка отправлена <b>✓</b>";
+      submitButton.classList.add("is-success");
       signupStatus.textContent = "Спасибо! Заявка отправлена, скоро с вами свяжутся.";
     } catch (error) {
       console.error("Signup submission failed:", error);
+      submitButton.innerHTML = submitButtonLabel;
       signupStatus.textContent =
-        "Не удалось отправить заявку. Попробуйте ещё раз или свяжитесь со мной через контакты на сайте.";
+        error instanceof TypeError
+          ? "Нет связи с сервером. Проверьте интернет и совпадение SITE_ORIGIN в Cloudflare с адресом сайта."
+          : `Заявка не отправлена: ${error.message}`;
     } finally {
-      submitButton.disabled = false;
+      submitButton.disabled = hasSubmitted;
+    }
+  });
+}
+
+/* Виджет чата — есть на главной и странице Python */
+const supportWidget = document.getElementById("supportWidget");
+const supportChatForm = document.getElementById("supportChatForm");
+
+const pageFooter = document.querySelector("footer");
+if (supportWidget && pageFooter && "IntersectionObserver" in window) {
+  const footerObserver = new IntersectionObserver(
+    ([entry]) => supportWidget.classList.toggle("near-footer", entry.isIntersecting),
+    { rootMargin: "0px 0px -72px 0px" },
+  );
+  footerObserver.observe(pageFooter);
+}
+
+if (supportWidget && supportChatForm) {
+  const supportChatInput = document.getElementById("supportChatInput");
+  const supportThread = document.getElementById("supportThread");
+  const supportChatStatus = document.getElementById("supportChatStatus");
+  const supportChatTab = document.getElementById("supportChatTab");
+  const supportToggle = document.getElementById("supportToggle");
+  const supportClose = document.getElementById("supportClose");
+  const sendButton = supportChatForm.querySelector('button[type="submit"]');
+  const endpoint = supportWidget.dataset.endpoint?.trim();
+  const sessionKey = "code-mentor-support-session";
+  const cursorKey = "code-mentor-support-cursor";
+  let sessionId;
+  let replyCursor = 0;
+  let pollTimer;
+  let pollInFlight = false;
+
+  const setChatStatus = (message, state = "") => {
+    supportChatStatus.textContent = message;
+    supportChatStatus.classList.remove("is-pending", "is-success", "is-error");
+    if (state) supportChatStatus.classList.add(`is-${state}`);
+  };
+
+  const createSessionId = () => {
+    if (crypto.randomUUID) return crypto.randomUUID();
+
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+  };
+
+  try {
+    sessionId = sessionStorage.getItem(sessionKey);
+    if (!sessionId || !/^(?:[0-9a-f]{32}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i.test(sessionId)) {
+      sessionId = createSessionId();
+      sessionStorage.setItem(sessionKey, sessionId);
+      sessionStorage.removeItem(cursorKey);
+    }
+
+    const savedCursor = Number(sessionStorage.getItem(cursorKey) || 0);
+    if (Number.isSafeInteger(savedCursor) && savedCursor >= 0) replyCursor = savedCursor;
+  } catch (error) {
+    console.warn("Could not persist support chat session:", error);
+    sessionId = createSessionId();
+  }
+
+  const addChatMessage = (text, sender, timeLabel) => {
+    const message = document.createElement("div");
+    message.className = `support-message support-message-${sender}`;
+
+    if (sender === "mentor") {
+      const avatar = document.createElement("span");
+      avatar.className = "support-message-avatar";
+      avatar.setAttribute("aria-hidden", "true");
+      avatar.textContent = "</>";
+      message.append(avatar);
+    }
+
+    const bubble = document.createElement("div");
+    bubble.className = "support-message-bubble";
+    const content = document.createElement("div");
+    content.className = "support-message-content";
+    content.textContent = text;
+    const time = document.createElement("time");
+    time.className = "support-message-time";
+    time.textContent = timeLabel || new Date().toLocaleTimeString("ru-RU", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    bubble.append(content, time);
+    message.append(bubble);
+    supportThread.append(message);
+    supportThread.scrollTop = supportThread.scrollHeight;
+  };
+
+  const saveReplyCursor = () => {
+    try {
+      sessionStorage.setItem(cursorKey, String(replyCursor));
+    } catch (error) {
+      console.warn("Could not persist support chat reply cursor:", error);
+    }
+  };
+
+  const requestSupport = async (payload) => {
+    if (!endpoint) throw new Error("Чат пока не подключён. Пожалуйста, свяжитесь через контакты на сайте.");
+
+    const response = await fetch(`${endpoint.replace(/\/$/, "")}/api/support`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...payload, sessionId }),
+    });
+
+    if (response.status === 404) {
+      throw new Error("На Worker не опубликован маршрут чата. Обновите Worker файлом telegram-worker.js.");
+    }
+
+    let result;
+    try {
+      result = await response.json();
+    } catch {
+      throw new Error("Сервер вернул некорректный ответ.");
+    }
+
+    if (!response.ok || !result.ok) {
+      throw new Error(result.error || "Не удалось связаться с поддержкой.");
+    }
+    return result;
+  };
+
+  const pollReplies = async () => {
+    if (pollInFlight || !endpoint) return;
+    pollInFlight = true;
+
+    try {
+      const result = await requestSupport({ action: "poll", after: replyCursor });
+      if (!Array.isArray(result.replies)) throw new Error("Сервер вернул некорректный список ответов.");
+
+      for (const reply of result.replies) {
+        if (!Number.isSafeInteger(reply.id) || reply.id <= replyCursor || typeof reply.text !== "string") {
+          throw new Error("Сервер вернул некорректный ответ поддержки.");
+        }
+        addChatMessage(reply.text, "mentor");
+        replyCursor = reply.id;
+      }
+
+      if (result.replies.length) saveReplyCursor();
+      if (supportChatStatus.textContent === "Подключаем чат…") setChatStatus("");
+    } catch (error) {
+      setChatStatus(
+        error instanceof TypeError
+          ? "Нет связи с чатом. Проверьте подключение и адрес сайта в настройках."
+          : error.message,
+        "error",
+      );
+      console.warn("Support chat polling failed:", error);
+    } finally {
+      pollInFlight = false;
+    }
+  };
+
+  const updatePolling = () => {
+    const isChatVisible =
+      supportWidget.classList.contains("open") &&
+      supportChatTab?.getAttribute("aria-selected") === "true";
+
+    if (isChatVisible && !pollTimer) {
+      if (!endpoint) {
+        setChatStatus("Чат пока не подключён. Пожалуйста, свяжитесь через контакты на сайте.", "error");
+        return;
+      }
+      setChatStatus("Подключаем чат…", "pending");
+      pollReplies();
+      pollTimer = window.setInterval(pollReplies, 4000);
+    } else if (!isChatVisible && pollTimer) {
+      window.clearInterval(pollTimer);
+      pollTimer = undefined;
+    }
+  };
+
+  supportChatForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const text = supportChatInput.value.trim();
+    if (!text || sendButton.disabled) return;
+
+    sendButton.disabled = true;
+    setChatStatus("Отправляем сообщение…", "pending");
+
+    try {
+      await requestSupport({ action: "message", text });
+      addChatMessage(text, "visitor");
+      supportChatInput.value = "";
+      setChatStatus("Сообщение отправлено. Ответ появится здесь.", "success");
+    } catch (error) {
+      setChatStatus(
+        error instanceof TypeError
+          ? "Нет связи с чатом. Проверьте подключение и адрес сайта в настройках."
+          : error.message,
+        "error",
+      );
+      console.error("Support chat message failed:", error);
+    } finally {
+      sendButton.disabled = false;
+      supportChatInput.focus();
+    }
+  });
+
+  supportChatTab?.addEventListener("click", () => window.setTimeout(updatePolling, 0));
+  supportToggle?.addEventListener("click", () => window.setTimeout(updatePolling, 0));
+  supportClose?.addEventListener("click", () => window.setTimeout(updatePolling, 0));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") window.setTimeout(updatePolling, 0);
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden && pollTimer) {
+      window.clearInterval(pollTimer);
+      pollTimer = undefined;
+    } else {
+      updatePolling();
     }
   });
 }

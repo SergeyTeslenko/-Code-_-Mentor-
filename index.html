@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261104-44">
+  <link rel="stylesheet" href="styles.css?v=20261104-69">
 </head>
 
 <body>
@@ -1949,7 +1949,7 @@
           <h2>Давайте познакомимся<br><span>на пробном занятии</span></h2>
           <p>Оставьте контакты — обсудим возраст, интересы ребёнка и подберём подходящий курс.</p>
         </div>
-        <form id="form" class="signup-form" data-endpoint="https://proud-surf-8913.sergiyteslenkodeveloper.workers.dev">
+        <form id="form" class="signup-form" data-endpoint="https://proud-surf-8913.sergiyteslenkodeveloper.workers.dev/api/lead">
           <label class="field">
             <span class="field-label">Имя родителя</span>
             <input required name="name" placeholder="Ваше имя">
@@ -1974,18 +1974,45 @@
           <button class="btn white full" type="submit">Записаться бесплатно <b>↗</b></button>
           <p class="signup-status" id="signupStatus" role="status" aria-live="polite"></p>
         </form>
-        <small class="signup-note">После настройки заявки будут приходить в Telegram.</small>
+        <a class="signup-telegram" href="https://t.me/codementor_brest_bot?start=site" target="_blank" rel="noopener">
+          <img src="telegram-bot-qr.png" alt="QR-код для перехода в Telegram-бот @codementor_brest_bot" width="220" height="220" loading="lazy">
+          <span>
+            <strong>Удобнее написать в Telegram?</strong>
+            <small>Наведите камеру на QR-код или откройте @codementor_brest_bot</small>
+          </span>
+          <span class="signup-telegram-arrow" aria-hidden="true">↗</span>
+        </a>
+        <small class="signup-note">Заявки и сообщения из чата приходят наставнику в Telegram.</small>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="container footer-inner"><a class="logo" href="#home"><span class="logo-mark">&lt;Code&gt;_&lt;/Mentor&gt;</span></a><span>© 2026 Code_Mentor · Программирование для детей</span>
+    <div class="container footer-inner">
+      <a class="logo" href="#home"><span class="logo-mark">&lt;Code&gt;_&lt;/Mentor&gt;</span></a>
+      <span>© 2026 Code_Mentor · Программирование для детей</span>
+      <div class="support-contacts-list footer-contacts" aria-label="Контакты">
+        <a class="support-contact-card" href="https://t.me/codementor_brest_bot?start=site" target="_blank" rel="noopener" aria-label="Открыть Telegram-бот @codementor_brest_bot">
+          <div class="support-contact-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.28-.89-.88.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg></div>
+          <div class="support-contact-info"><span class="support-contact-label">Telegram</span><span class="support-contact-value">@codementor_brest_bot</span></div>
+          <span class="support-contact-open" aria-hidden="true">↗</span>
+        </a>
+        <a class="support-contact-card" href="tel:+375339958966" aria-label="Позвонить по номеру +375 33 995-89-66">
+          <div class="support-contact-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.36 11.36 0 0 0 3.58.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.36 11.36 0 0 0 .57 3.58 1 1 0 0 1-.24 1.01Z"/></svg></div>
+          <div class="support-contact-info"><span class="support-contact-label">Телефон</span><span class="support-contact-value">+375 33 995-89-66</span></div>
+        </a>
+        <a class="support-contact-card support-contact-qr" href="https://t.me/codementor_brest_bot?start=site" target="_blank" rel="noopener" aria-label="Открыть QR-код Telegram-бота @codementor_brest_bot">
+          <div class="support-contact-icon"><img class="support-qr-thumb" src="telegram-bot-qr.png" alt="" width="32" height="32" loading="lazy"></div>
+          <div class="support-contact-info">
+            <img class="support-qr-expanded" src="telegram-bot-qr.png" alt="" width="60" height="60" loading="lazy">
+            <span class="support-qr-copy"><span class="support-contact-label">QR-код Telegram</span><span class="support-contact-value">Наведите камеру телефона</span></span>
+          </div>
+        </a>
+      </div>
     </div>
   </footer>
 
-  <script src="script.js?v=20261104-4"></script>
-  <div class="support-widget" id="supportWidget">
+  <div class="support-widget" id="supportWidget" data-endpoint="https://proud-surf-8913.sergiyteslenkodeveloper.workers.dev">
     <div class="support-panel" id="supportPanel">
       <div class="support-header">
         <div class="support-header-avatar">&lt;/&gt;</div>
@@ -2002,40 +2029,43 @@
         </button>
       </div>
       <div class="support-tabs" role="tablist">
-        <button class="support-tab active" type="button" data-tab="contacts" role="tab" aria-selected="true">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.36 11.36 0 0 0 3.58.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.36 11.36 0 0 0 .57 3.58 1 1 0 0 1-.24 1.01Z"/></svg>
-          Контакты
+        <button class="support-tab active" id="supportChatTab" type="button" data-tab="chat" role="tab" aria-selected="true" aria-controls="supportChatPane">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.28-.89-.88.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+          Написать
         </button>
       </div>
       <div class="support-panes">
-        <div class="support-pane active" data-pane="contacts" role="tabpanel">
+        <div class="support-pane active" id="supportChatPane" data-pane="chat" role="tabpanel" aria-labelledby="supportChatTab">
           <div class="support-contacts">
             <div class="support-contacts-head">
-              <span class="support-contacts-kicker">Связаться со мной</span>
-              <div class="support-contacts-title">Обсудим занятия<br><span>для вашего ребёнка</span></div>
-              <p class="support-contacts-text">Расскажите о возрасте и интересах ребёнка — подберём подходящий формат обучения и ответим на все вопросы.</p>
+              <span class="support-contacts-kicker">Я на связи</span>
+              <div class="support-contacts-title">Давайте обсудим<br><span>занятия</span></div>
+              <p class="support-contacts-text">Напишите сообщение здесь или выберите удобный способ связи ниже.</p>
             </div>
-            <div class="support-contacts-list">
-              <a class="support-contact-card" href="https://t.me/codementor_brest_bot" target="_blank" rel="noopener">
-                <div class="support-contact-icon">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.28-.89-.88.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+            <div class="support-chat-body">
+              <div class="support-thread" id="supportThread" role="log" aria-live="polite" aria-relevant="additions">
+                <div class="support-message support-message-mentor">
+                  <span class="support-message-avatar" aria-hidden="true">&lt;/&gt;</span>
+                  <div class="support-message-bubble">
+                    <div class="support-message-content">Здравствуйте! Напишите вопрос — он придёт наставнику в Telegram. Ответ появится здесь.</div>
+                    <time class="support-message-time">Поддержка</time>
+                  </div>
                 </div>
-                <div class="support-contact-info">
-                  <span class="support-contact-label">Telegram</span>
-                  <span class="support-contact-value">@codementor_brest_bot</span>
+              </div>
+              <form class="support-composer" id="supportChatForm">
+                <div class="support-composer-row">
+                  <label class="support-composer-field">
+                    <span class="sr-only">Ваше сообщение</span>
+                    <input class="support-composer-input" id="supportChatInput" name="message" maxlength="1500" placeholder="Напишите сообщение…" required autocomplete="off">
+                  </label>
+                  <button class="support-composer-send" type="submit" aria-label="Отправить сообщение">
+                    <svg viewBox="0 0 24 24"><path d="M2.4 11.2 21 3.4l-7.8 18.2-2.7-7.1-8.1-3.3Zm8.1 3.3 5.2-5.2"/></svg>
+                  </button>
                 </div>
-              </a>
-              <a class="support-contact-card" href="tel:+375339958966">
-                <div class="support-contact-icon">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.36 11.36 0 0 0 3.58.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.36 11.36 0 0 0 .57 3.58 1 1 0 0 1-.24 1.01Z"/></svg>
-                </div>
-                <div class="support-contact-info">
-                  <span class="support-contact-label">Телефон</span>
-                  <span class="support-contact-value">+375 33 995-89-66</span>
-                </div>
-              </a>
+                <span class="support-composer-status" id="supportChatStatus" role="status" aria-live="polite"></span>
+              </form>
+              <small class="support-composer-hint">Не отправляйте пароли или платёжные данные.</small>
             </div>
-            <a class="support-contacts-action" href="#signup">Оставить заявку <span>↗</span></a>
           </div>
         </div>
       </div>
@@ -2053,7 +2083,7 @@
       var toggle = document.getElementById('supportToggle');
       var panel = document.getElementById('supportPanel');
       var closeBtn = document.getElementById('supportClose');
-      var tabs = document.querySelectorAll('.support-tab');
+      var tabs = document.querySelectorAll('.support-tab[data-tab]');
       var panes = document.querySelectorAll('.support-pane');
       if (!widget || !toggle || !panel) return;
       function openWidget(){ widget.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
@@ -2070,6 +2100,7 @@
       });
     });
   </script>
+  <script src="script.js?v=20261104-14"></script>
   </body>
 
 </html>
