@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261104-69">
+  <link rel="stylesheet" href="styles.css?v=20261106-100">
 </head>
 
 <body>
@@ -25,7 +25,12 @@
         <a href="index.html#faq">Вопросы</a>
         <a href="index.html#prices">Цены</a>
       </nav>
-      <a class="nav-button" href="index.html#signup">Записаться</a>
+      <a class="nav-button" href="index.html#signup">Записаться
+        <svg class="nav-button-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M16 3v4M8 3v4M3 11h18M8 16l2 2 4-4" />
+        </svg>
+      </a>
     </div>
   </header>
 
@@ -45,7 +50,9 @@
             <span class="tech django">Django</span>
           </div>
           <div class="actions">
-            <a class="btn primary" href="index.html#signup">Записаться бесплатно <b>↗</b></a>
+            <a class="btn primary" href="index.html#signup">Записаться бесплатно
+              <svg class="booking-button-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18M8 16l2 2 4-4"/></svg>
+            </a>
             <a class="btn white" href="#program">Смотреть программу →</a>
           </div>
         </div>
@@ -692,7 +699,9 @@
           <p>Оставите контакты — определим уровень ребёнка, подберём темп и покажем, как выглядит первое занятие.</p>
         </div>
         <div class="actions">
-          <a class="btn white" href="index.html#signup">Записаться бесплатно ↗</a>
+          <a class="btn white" href="index.html#signup">Записаться бесплатно
+            <svg class="booking-button-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18M8 16l2 2 4-4"/></svg>
+          </a>
           <a class="btn white" href="index.html#prices">Посмотреть цены →</a>
         </div>
       </div>
@@ -705,41 +714,19 @@
   <footer>
     <div class="container footer-inner">
       <a class="logo" href="index.html#home"><span class="logo-mark">&lt;Code&gt;_&lt;/Mentor&gt;</span></a>
-      <span>© 2026 Code_Mentor · Программирование для детей</span>
+      <span>© 2026 · Программирование для детей</span>
       <div class="support-contacts-list footer-contacts" aria-label="Контакты">
-        <a class="support-contact-card" href="https://t.me/codementor_brest_bot?start=site" target="_blank" rel="noopener" aria-label="Открыть Telegram-бот @codementor_brest_bot">
-          <div class="support-contact-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.28-.89-.88.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg></div>
-          <div class="support-contact-info"><span class="support-contact-label">Telegram</span><span class="support-contact-value">@codementor_brest_bot</span></div>
-          <span class="support-contact-open" aria-hidden="true">↗</span>
+        <a class="footer-contact-link" href="https://t.me/codementor_brest_bot?start=site" target="_blank" rel="noopener" aria-label="Открыть Telegram-бот @codementor_brest_bot">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.8 4.2 18.6 19c-.24 1.05-.86 1.3-1.73.8l-4.77-3.52-2.3 2.22c-.25.25-.46.46-.94.46l.34-4.86 8.86-8c.39-.35-.09-.55-.6-.2L6.5 12.84l-4.63-1.45c-1.01-.32-1.03-1 .21-1.49L20.2 2.7c.9-.33 1.68.22 1.6 1.5Z"/></svg>
+          <span>Telegram</span>
         </a>
-        <a class="support-contact-card" href="tel:+375339958966" aria-label="Позвонить по номеру +375 33 995-89-66">
-          <div class="support-contact-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.36 11.36 0 0 0 3.58.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.36 11.36 0 0 0 .57 3.58 1 1 0 0 1-.24 1.01Z"/></svg></div>
-          <div class="support-contact-info"><span class="support-contact-label">Телефон</span><span class="support-contact-value">+375 33 995-89-66</span></div>
-        </a>
-        <a class="support-contact-card support-contact-qr" href="https://t.me/codementor_brest_bot?start=site" target="_blank" rel="noopener" aria-label="Открыть QR-код Telegram-бота @codementor_brest_bot">
-          <div class="support-contact-icon"><img class="support-qr-thumb" src="telegram-bot-qr.png" alt="" width="32" height="32" loading="lazy"></div>
-          <div class="support-contact-info">
-            <img class="support-qr-expanded" src="telegram-bot-qr.png" alt="" width="60" height="60" loading="lazy">
-            <span class="support-qr-copy"><span class="support-contact-label">QR-код Telegram</span><span class="support-contact-value">Наведите камеру телефона</span></span>
-          </div>
+        <a class="footer-contact-link" href="tel:+375339958966" aria-label="Позвонить по номеру +375 33 995-89-66">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.1 3.5 10 3c.7-.1 1.4.3 1.6 1l1.1 3.2c.2.6 0 1.3-.5 1.7l-1.7 1.3a15.1 15.1 0 0 0 3.3 3.8 15.4 15.4 0 0 0 2.7 1.9l1.4-1.7c.4-.5 1.1-.7 1.7-.4l3 1.5c.6.3.9 1 .7 1.7l-.7 2.8c-.2.7-.8 1.2-1.6 1.2C11.3 20.7 3.2 12.4 3.6 5c0-.7.7-1.3 1.4-1.4l2.1-.1Z"/></svg>
+          <span>Позвонить</span>
         </a>
       </div>
     </div>
   </footer>
-
-  <aside class="contact-widget" aria-label="Контакты преподавателя">
-    <div class="contact-panel" id="contactPanel" hidden>
-      <button class="contact-close" type="button" aria-label="Закрыть окно контактов">×</button>
-      <span class="contact-kicker">Связаться со мной</span>
-      <h2>Обсудим занятия<br><span>для вашего ребёнка</span></h2>
-      <p>Расскажите о возрасте и интересах ребёнка — подберём подходящий формат обучения.</p>
-      <a class="contact-action" href="index.html#signup">Оставить заявку <span>↗</span></a>
-    </div>
-    <button class="contact-toggle" type="button" aria-expanded="false" aria-controls="contactPanel">
-      <span class="contact-toggle-icon" aria-hidden="true">✦</span>
-      <span>Контакты</span>
-    </button>
-  </aside>
 
   <div class="support-widget" id="supportWidget" data-endpoint="https://proud-surf-8913.sergiyteslenkodeveloper.workers.dev">
     <div class="support-panel" id="supportPanel">
@@ -796,23 +783,33 @@
         </div>
       </div>
     </div>
-    <button class="support-toggle" type="button" id="supportToggle" aria-expanded="false" aria-controls="supportPanel">
-      <span class="support-toggle-icon"><svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.36 11.36 0 0 0 3.58.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.36 11.36 0 0 0 .57 3.58 1 1 0 0 1-.24 1.01Z"/></svg></span>
-      <span class="support-toggle-label">Поддержка</span>
+    <button class="support-corner-toggle" type="button" id="supportCornerToggle" aria-label="Открыть поддержку" aria-expanded="false" aria-controls="supportPanel">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2 1-4.2A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/></svg>
     </button>
   </div>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       var widget = document.getElementById('supportWidget');
       var toggle = document.getElementById('supportToggle');
+      var cornerToggle = document.getElementById('supportCornerToggle');
       var panel = document.getElementById('supportPanel');
       var closeBtn = document.getElementById('supportClose');
       var tabs = document.querySelectorAll('.support-tab[data-tab]');
       var panes = document.querySelectorAll('.support-pane');
-      if (!widget || !toggle || !panel) return;
-      function openWidget(){ widget.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
-      function closeWidget(){ widget.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
-      toggle.addEventListener('click', function(){ widget.classList.contains('open') ? closeWidget() : openWidget(); });
+      if (!widget || !panel) return;
+      var toggles = [toggle, cornerToggle].filter(Boolean);
+      if (!toggles.length) return;
+      function syncToggleState(isOpen) {
+        toggles.forEach(function(button) {
+          button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          button.setAttribute('aria-label', isOpen ? 'Закрыть поддержку' : 'Открыть поддержку');
+        });
+      }
+      function openWidget(){ widget.classList.add('open'); syncToggleState(true); }
+      function closeWidget(){ widget.classList.remove('open'); syncToggleState(false); }
+      toggles.forEach(function(button) {
+        button.addEventListener('click', function(){ widget.classList.contains('open') ? closeWidget() : openWidget(); });
+      });
       if (closeBtn) closeBtn.addEventListener('click', closeWidget);
       document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeWidget(); });
       tabs.forEach(function(tab){
@@ -824,7 +821,7 @@
       });
     });
   </script>
-  <script src="script.js?v=20261104-14"></script>
+  <script src="script.js?v=20261106-17"></script>
   </body>
 
 </html>

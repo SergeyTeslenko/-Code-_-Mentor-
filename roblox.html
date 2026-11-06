@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20261029-14">
+  <link rel="stylesheet" href="styles.css?v=20261106-34">
 </head>
 
 <body>
@@ -25,7 +25,12 @@
         <a href="index.html#faq">Вопросы</a>
         <a href="index.html#prices">Цены</a>
       </nav>
-      <a class="nav-button" href="index.html#signup">Записаться</a>
+      <a class="nav-button" href="index.html#signup">Записаться
+        <svg class="nav-button-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M16 3v4M8 3v4M3 11h18M8 16l2 2 4-4" />
+        </svg>
+      </a>
     </div>
   </header>
 
@@ -45,7 +50,9 @@
             <span class="tech three-d">3D</span>
           </div>
           <div class="actions">
-            <a class="btn primary" href="index.html#signup">Записаться бесплатно <b>↗</b></a>
+            <a class="btn primary" href="index.html#signup">Записаться бесплатно
+              <svg class="booking-button-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18M8 16l2 2 4-4"/></svg>
+            </a>
             <a class="btn white" href="#program">Смотреть программу →</a>
           </div>
         </div>
@@ -230,7 +237,9 @@
           <p>Оставите контакты — определим уровень ребёнка, подберём темп и покажем, как выглядит первое занятие.</p>
         </div>
         <div class="actions">
-          <a class="btn white" href="index.html#signup">Записаться бесплатно ↗</a>
+          <a class="btn white" href="index.html#signup">Записаться бесплатно
+            <svg class="booking-button-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18M8 16l2 2 4-4"/></svg>
+          </a>
           <a class="btn white" href="index.html#prices">Посмотреть цены →</a>
         </div>
       </div>
@@ -241,7 +250,19 @@
   </main>
 
   <footer>
-    <div class="container footer-inner"><a class="logo" href="index.html#home"><span class="logo-mark">&lt;Code&gt;_&lt;/Mentor&gt;</span></a><span>© 2026 Code_Mentor · Программирование для детей</span>
+    <div class="container footer-inner">
+      <a class="logo" href="index.html#home"><span class="logo-mark">&lt;Code&gt;_&lt;/Mentor&gt;</span></a>
+      <span>© 2026 · Программирование для детей</span>
+      <div class="support-contacts-list footer-contacts" aria-label="Контакты">
+        <a class="footer-contact-link" href="https://t.me/codementor_brest_bot?start=site" target="_blank" rel="noopener" aria-label="Открыть Telegram-бот @codementor_brest_bot">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.8 4.2 18.6 19c-.24 1.05-.86 1.3-1.73.8l-4.77-3.52-2.3 2.22c-.25.25-.46.46-.94.46l.34-4.86 8.86-8c.39-.35-.09-.55-.6-.2L6.5 12.84l-4.63-1.45c-1.01-.32-1.03-1 .21-1.49L20.2 2.7c.9-.33 1.68.22 1.6 1.5Z"/></svg>
+          <span>Telegram</span>
+        </a>
+        <a class="footer-contact-link" href="tel:+375339958966" aria-label="Позвонить по номеру +375 33 995-89-66">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.1 3.5 10 3c.7-.1 1.4.3 1.6 1l1.1 3.2c.2.6 0 1.3-.5 1.7l-1.7 1.3a15.1 15.1 0 0 0 3.3 3.8 15.4 15.4 0 0 0 2.7 1.9l1.4-1.7c.4-.5 1.1-.7 1.7-.4l3 1.5c.6.3.9 1 .7 1.7l-.7 2.8c-.2.7-.8 1.2-1.6 1.2C11.3 20.7 3.2 12.4 3.6 5c0-.7.7-1.3 1.4-1.4l2.1-.1Z"/></svg>
+          <span>Позвонить</span>
+        </a>
+      </div>
     </div>
   </footer>
 

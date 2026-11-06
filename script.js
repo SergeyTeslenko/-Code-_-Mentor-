@@ -132,6 +132,18 @@ if (format && lessons && lessonOut && total) {
   calculate();
 }
 
+const telegramQrOpen = document.getElementById("telegramQrOpen");
+const telegramQrDialog = document.getElementById("telegramQrDialog");
+const telegramQrClose = telegramQrDialog?.querySelector(".qr-dialog-close");
+
+if (telegramQrOpen && telegramQrDialog instanceof HTMLDialogElement && telegramQrClose) {
+  telegramQrOpen.addEventListener("click", () => telegramQrDialog.showModal());
+  telegramQrClose.addEventListener("click", () => telegramQrDialog.close());
+  telegramQrDialog.addEventListener("click", (event) => {
+    if (event.target === telegramQrDialog) telegramQrDialog.close();
+  });
+}
+
 /* Форма записи — есть только на главной странице */
 const signupForm = document.getElementById("form");
 
@@ -207,22 +219,15 @@ if (signupForm) {
 const supportWidget = document.getElementById("supportWidget");
 const supportChatForm = document.getElementById("supportChatForm");
 
-const pageFooter = document.querySelector("footer");
-if (supportWidget && pageFooter && "IntersectionObserver" in window) {
-  const footerObserver = new IntersectionObserver(
-    ([entry]) => supportWidget.classList.toggle("near-footer", entry.isIntersecting),
-    { rootMargin: "0px 0px -72px 0px" },
-  );
-  footerObserver.observe(pageFooter);
-}
-
 if (supportWidget && supportChatForm) {
   const supportChatInput = document.getElementById("supportChatInput");
   const supportThread = document.getElementById("supportThread");
   const supportChatStatus = document.getElementById("supportChatStatus");
   const supportChatTab = document.getElementById("supportChatTab");
   const supportToggle = document.getElementById("supportToggle");
+  const supportCornerToggle = document.getElementById("supportCornerToggle");
   const supportClose = document.getElementById("supportClose");
+  const pageFooter = document.querySelector("footer");
   const sendButton = supportChatForm.querySelector('button[type="submit"]');
   const endpoint = supportWidget.dataset.endpoint?.trim();
   const sessionKey = "code-mentor-support-session";
@@ -374,6 +379,41 @@ if (supportWidget && supportChatForm) {
     }
   };
 
+  if (supportCornerToggle && pageFooter) {
+    let footerPositionFrame = 0;
+    const updateCornerPosition = () => {
+      footerPositionFrame = 0;
+      const footerRect = pageFooter.getBoundingClientRect();
+      const toggleHeight = supportCornerToggle.offsetHeight;
+      const margin = 16;
+      const footerVisible = footerRect.top < window.innerHeight && footerRect.bottom > 0;
+
+      if (!footerVisible) {
+        supportCornerToggle.style.removeProperty("--support-corner-bottom");
+        supportCornerToggle.classList.remove("is-over-footer");
+        supportWidget.querySelector(".support-panel")?.style.removeProperty("--support-panel-bottom");
+        return;
+      }
+
+      if (footerRect.top <= toggleHeight + margin) {
+        supportCornerToggle.classList.add("is-over-footer");
+        return;
+      }
+
+      const bottom = Math.max(20, window.innerHeight - footerRect.top + margin);
+      supportCornerToggle.style.setProperty("--support-corner-bottom", `${bottom}px`);
+      supportCornerToggle.classList.remove("is-over-footer");
+      supportWidget.querySelector(".support-panel")?.style.setProperty("--support-panel-bottom", `${bottom + toggleHeight + 12}px`);
+    };
+    const scheduleCornerPosition = () => {
+      if (!footerPositionFrame) footerPositionFrame = window.requestAnimationFrame(updateCornerPosition);
+    };
+
+    window.addEventListener("scroll", scheduleCornerPosition, { passive: true });
+    window.addEventListener("resize", scheduleCornerPosition);
+    updateCornerPosition();
+  }
+
   supportChatForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const text = supportChatInput.value.trim();
@@ -403,6 +443,7 @@ if (supportWidget && supportChatForm) {
 
   supportChatTab?.addEventListener("click", () => window.setTimeout(updatePolling, 0));
   supportToggle?.addEventListener("click", () => window.setTimeout(updatePolling, 0));
+  supportCornerToggle?.addEventListener("click", () => window.setTimeout(updatePolling, 0));
   supportClose?.addEventListener("click", () => window.setTimeout(updatePolling, 0));
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") window.setTimeout(updatePolling, 0);
