@@ -823,6 +823,7 @@
               <li>Определение уровня знаний</li>
               <li>Последние 5 минут — с родителями: обсудим план обучения</li>
             </ul>
+            <a class="btn price-btn price-btn-outline" href="#signup" data-plan="Пробный урок в Zoom">Записаться бесплатно</a>
           </article>
           <article class="price-card">
             <div class="box-icon box-icon-single" aria-hidden="true">
@@ -835,7 +836,12 @@
             <h3>1 занятие</h3>
             <p class="price-card-price">30 BYN</p>
             <p class="price-card-duration">50–60 минут</p>
-            <p class="price-card-description">Для разовой консультации, разбора сложной темы или гибкого графика без обязательств.</p>
+            <ul class="price-card-details">
+              <li>Разбор сложной темы или консультация</li>
+              <li>Гибкий график без обязательств</li>
+              <li>Подходит для нового ученика</li>
+            </ul>
+            <a class="btn price-btn price-btn-outline" href="#signup" data-plan="1 занятие">Записаться на урок</a>
           </article>
           <article class="price-card">
             <div class="box-icon box-icon-optimal" aria-hidden="true">
@@ -846,10 +852,15 @@
             </div>
             <p class="price-card-kicker">ХИТ ПРОДАЖ</p>
             <h3>Пакет «Оптимальный»</h3>
-            <p class="price-card-lessons">4 урока</p>
+            <p class="price-card-lessons">4 урока · 50–60 минут</p>
             <p class="price-card-price">100 BYN</p>
             <p class="price-card-unit">25 BYN за урок <span>Экономия 20 BYN</span></p>
-            <p class="price-card-description">Занятия 2 раза в неделю, оплата раз в две недели. Комфортный платёж для семейного бюджета.</p>
+            <ul class="price-card-details">
+              <li>Занятия 2 раза в неделю</li>
+              <li>Оплата раз в две недели</li>
+              <li>Комфортный платёж для семьи</li>
+            </ul>
+            <a class="btn price-btn price-btn-primary" href="#signup" data-plan="Пакет «Оптимальный»">Выбрать пакет</a>
           </article>
           <article class="price-card price-card-pair">
             <span class="price-badge"><span class="price-badge-star" aria-hidden="true">★</span> Интересное предложение</span>
@@ -863,9 +874,14 @@
             <p class="price-card-kicker">ДЛЯ ДВОИХ</p>
             <h3>«Вместе веселее»</h3>
             <p class="price-card-lessons">Парное занятие · 55 минут</p>
-            <p class="price-card-price">17 BYN</p>
-            <p class="price-card-unit">за урок с человека <span>Абонемент на 8 занятий — 136 BYN с человека</span></p>
-            <p class="price-card-description">Разовое занятие — 20 BYN с человека. Занимайтесь с другом или одноклассником: программа адаптируется под двух учеников одного уровня.</p>
+            <p class="price-card-price">136 BYN</p>
+            <p class="price-card-unit">Абонемент на 8 занятий <span>17 BYN за урок с человека</span></p>
+            <ul class="price-card-details">
+              <li>Разовое занятие — 20 BYN с человека</li>
+              <li>С другом или одноклассником</li>
+              <li>Программа под двух учеников одного уровня</li>
+            </ul>
+            <a class="btn price-btn price-btn-outline-teal" href="#signup" data-plan="Парное «Вместе веселее»">Записаться вдвоём</a>
           </article>
           <article class="price-card price-card-featured">
             <span class="price-badge price-badge-pair"><span aria-hidden="true">%</span> Самый выгодный</span>
@@ -877,10 +893,15 @@
             </div>
             <p class="price-card-kicker">ПАКЕТ НА МЕСЯЦ</p>
             <h3>Пакет «Прогресс»</h3>
-            <p class="price-card-lessons">8 уроков</p>
+            <p class="price-card-lessons">8 уроков · 50–60 минут</p>
             <p class="price-card-price">192 BYN</p>
             <p class="price-card-unit">24 BYN за урок <span>Экономия 48 BYN</span></p>
-            <p class="price-card-description">Занятия 2 раза в неделю. Фиксированное место в расписании и максимальная скидка.</p>
+            <ul class="price-card-details">
+              <li>Занятия 2 раза в неделю</li>
+              <li>Фиксированное место в расписании</li>
+              <li>Максимальная скидка</li>
+            </ul>
+            <a class="btn price-btn price-btn-teal" href="#signup" data-plan="Пакет «Прогресс»">Забронировать место</a>
           </article>
         </div>
         <div class="pricing-perks">
@@ -1067,8 +1088,9 @@
           </label>
           <label class="field">
             <span class="field-label">Интерес</span>
-            <input name="interest" placeholder="Python, игры, сайты...">
+            <input name="interest" id="interestInput" placeholder="Python, игры, сайты...">
           </label>
+          <input type="hidden" name="plan" id="planInput" value="">
           <button class="btn white full" type="submit">Записаться бесплатно
           </button>
           <p class="signup-status" id="signupStatus" role="status" aria-live="polite"></p>
@@ -1214,6 +1236,15 @@
       });
       if (closeBtn) closeBtn.addEventListener('click', closeWidget);
       document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeWidget(); });
+      document.querySelectorAll('[data-plan]').forEach(function(link){
+        link.addEventListener('click', function(){
+          var plan = link.getAttribute('data-plan');
+          var planInput = document.getElementById('planInput');
+          var interestInput = document.getElementById('interestInput');
+          if (planInput) planInput.value = plan;
+          if (interestInput && plan) interestInput.value = plan;
+        });
+      });
       tabs.forEach(function(tab){
         tab.addEventListener('click', function(){
           var target = tab.dataset.tab;
